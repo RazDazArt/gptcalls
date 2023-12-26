@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Copy Example</title>
+
+    <!-- Get text from site to server -->>
+    <script type="text/javascript">
+        function sendTextToServer() {
+            var text = document.getElementById("inputBox").value;
+            var outputbox = document.getElementById("largeTextBox");
+            // Using Fetch API to send data to the server
+            fetch('/receive_text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data.reply);
+                outputbox.value = data.reply
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+            // Prevent form from submitting in the traditional way
+            return false;
+        }
+    </script>
+
+
+
+
+</head>
+<body>
+    <h2>Text Copy Interface</h2>
+
+    <!-- Textbox for user input -->
+    <input type="text" id="inputBox" placeholder="Type here...">
+
+    <!-- Button to trigger the copy action -->
+    <button onclick="sendTextToServer()">Copy Text</button>
+
+    <!-- Large Textbox to display copied text -->
+    <textarea id="largeTextBox" rows="10" cols="50" placeholder="Copied text will appear here..."></textarea>
+
+    
+    
+    
+    
+    
+
+
+</body>
+</html>
