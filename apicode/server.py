@@ -5,6 +5,9 @@ import os
 from openai import OpenAI
 key = open("C:/Users/mrfla/Pictures/openAIKEY.txt", "r").read().strip('\n')
 
+
+message_history = []
+# SERVER COOOODEE!
 class Serv(BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -27,6 +30,13 @@ class Serv(BaseHTTPRequestHandler):
         print("Received data:", post_data)
 
 
+# CHATGPT COOOODEE!!
+        
+
+        
+        user_input = post_data
+        message_history.append({"role": "user","content": user_input})
+        print(message_history)
 
         client = OpenAI(
         # This is the default and can be omitted
@@ -34,16 +44,13 @@ class Serv(BaseHTTPRequestHandler):
         )
 
         chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": post_data,
-            }
-        ],
-        model="gpt-3.5-turbo",
+            messages= message_history,
+            model="gpt-3.5-turbo"
         )
         reply = chat_completion.choices[0].message.content
         print(reply)
+        
+        message_history.append({"role": "assistant", "content": reply})
 
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
