@@ -7,6 +7,7 @@ key = open("C:/Users/mrfla/Pictures/openAIKEY.txt", "r").read().strip('\n')
 
 
 message_history = []
+message_history.append({"role": "system","content": "You serve to help young children with social anxiety and difficulties to talk better with people. It is important to keep your responses short and good for conversation. take on the personality of the character elmo from sesame street to appeal to children."})
 # SERVER COOOODEE!
 class Serv(BaseHTTPRequestHandler):
 
@@ -38,11 +39,13 @@ class Serv(BaseHTTPRequestHandler):
         client = OpenAI(
         # This is the default and can be omitted
         api_key = key
+        
         )
-
+        assistant_id = "asst_TucPuTOqSj8Mz6e1pJdttkw6"
         chat_completion = client.chat.completions.create(
-            messages= message_history,
-            model="gpt-3.5-turbo"
+            
+            messages = message_history,
+            model = "gpt-3.5-turbo"
         )
         reply = chat_completion.choices[0].message.content
         print(reply)
