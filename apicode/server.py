@@ -30,10 +30,7 @@ class Serv(BaseHTTPRequestHandler):
         print("Received data:", post_data)
 
 
-# CHATGPT COOOODEE!!
-        
-
-        
+# CHATGPT COOOODEE!!(THIS IS STILL PART OF DO_POST)
         user_input = post_data
         message_history.append({"role": "user","content": user_input})
         print(message_history)
