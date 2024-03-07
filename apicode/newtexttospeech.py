@@ -1,7 +1,10 @@
 import requests
-import pygame
+#  import pygame
 import io
-
+import vlc
+import time
+from pydub import AudioSegment
+from pydub.playback import play
 
 def get_cloned_voices(api_key, user_id):
     url = "https://api.play.ht/api/v2/cloned-voices"
@@ -19,15 +22,18 @@ def get_cloned_voices(api_key, user_id):
 
 
 
+geto = "s3://voice-cloning-zero-shot/89f161a2-26df-4f74-8f7c-fb87b4975be4/geto/manifest.json"
+goku = "s3://voice-cloning-zero-shot/d74ee38a-63d9-46b4-bc33-fc5210be3946/goku/manifest.json"
+gojo = "s3://voice-cloning-zero-shot/e26a3491-8422-4fb0-9772-b6c4be1bca90/gojo/manifest.json"
+getojp = "s3://voice-cloning-zero-shot/afc16f8a-042b-4a3c-aeaa-92ce47770772/getojp/manifest.json"
 
 
-
-def text_to_speech(text, voice, api_key):
+def text_to_speech(text, voice, api_key, user_id):
     url = "https://api.play.ht/api/v2/tts"
 
     headers = {
-        "Authorization": "Bearer 2ce4d441c833453aaf3bcf1bcc2aca7b",
-        "X-User-Id": user_id 
+        "Authorization": f"Bearer {api_key}",
+        "X-User-Id": user_id
     }
 
     payload = {
@@ -39,26 +45,12 @@ def text_to_speech(text, voice, api_key):
     response = requests.post(url, json=payload, headers=headers)
 
     if response.status_code == 201:
-        audio_url = response.json()['url']
-        return audio_url
+        time.sleep(20)
+        audio_url = response.json().get('url')
+        return audio_url if audio_url else "Error: URL not found in response"
     else:
         return "Error: " + response.text
 
-def play_audio_from_url(url):
-    # Initialize pygame
-    pygame.init()
-    pygame.mixer.init()
-
-    # Download the audio file
-    response = requests.get(url)
-    if response.status_code == 200:
-        audio_file = io.BytesIO(response.content)
-        pygame.mixer.music.load(audio_file)
-        pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy():  # Wait for audio to finish playing
-            pygame.time.Clock().tick(10)
-    else:
-        print("Error downloading the audio file")
 
 
 cloned_voices = get_cloned_voices("2ce4d441c833453aaf3bcf1bcc2aca7b", "ynqkzbWUjISoU9q90qWtywn2gQF2")
@@ -66,13 +58,18 @@ print(cloned_voices)
 
 
 # Example usage
-api_key = "2ce4d441c833453aaf3bcf1bcc2aca7b"
-text = "Hello, this is a test message."
-voice = "s3://voice-cloning-zero-shot/d74ee38a-63d9-46b4-bc33-fc5210be3946/goku/manifest.json"
-user_id = "ynqkzbWUjISoU9q90qWtywn2gQF2"
+api_key = "2d89f10942dd45f9b02e1db560f572c6"
+text = "hi"
+voice = gojo
+user_id = "0KgLGbE09wSvs4Fvpkb9fMU4DgC3"
 
-audio_url = text_to_speech(text, voice, api_key)
-if audio_url.startswith("http"):
-    play_audio_from_url(audio_url)
-else:
-    print(audio_url)
+
+
+
+
+
+def play_audio(text):
+    audio_url = text_to_speech(text, voice, api_key, user_id)
+    final_audio = vlc.MediaPlayer(audio_url)
+    final_audio.play()
+    print("this is da input my og " + audio_url)
