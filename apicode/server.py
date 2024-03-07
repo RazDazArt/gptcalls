@@ -12,6 +12,8 @@ elmo = "You serve to help young children with social anxiety and difficulties to
 gojo = "you are to pretend to be the strongest jujutsu sorcerer of the modern age: gojo satoru. Talk with short responses and have all the sass and drip that gojo has. Become gojo breath gojo. the user should feel like they are talking to gojo satoru directly."
 
 
+print("i messed up")
+
 message_history = []
 message_history.append({"role": "system","content": gojo})
 # SERVER COOOODEE!
@@ -35,7 +37,7 @@ class Serv(BaseHTTPRequestHandler):
 
         print("Transcribed Text:", transcribed_text)
         # Read and decode the data
-       #  post_data = self.rfile.read(content_length).decode('utf-8')
+        # post_data = self.rfile.read(content_length).decode('utf-8')
         # print("Received data:", post_data)
 
 
