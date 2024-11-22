@@ -5,6 +5,8 @@ import vlc
 import time
 from pydub import AudioSegment
 from pydub.playback import play
+import requests
+import time
 
 def get_cloned_voices(api_key, user_id):
     url = "https://api.play.ht/api/v2/cloned-voices"
@@ -18,21 +20,22 @@ def get_cloned_voices(api_key, user_id):
         return response.json()  # This will return the list of cloned voices
     else:
         return "Error: " + response.text
+                                                                                            
 
 
 
-
-geto = "s3://voice-cloning-zero-shot/89f161a2-26df-4f74-8f7c-fb87b4975be4/geto/manifest.json"
-goku = "s3://voice-cloning-zero-shot/d74ee38a-63d9-46b4-bc33-fc5210be3946/goku/manifest.json"
+geto = "s3://voice-cloning-zeroot/89f161a2-26df-4f74-8f7c-fb87b4975be4/geto/manifest.json"
+goku = "s3://voice-cloning-zero-shot/d74e0be3946-e38a-63d9-46b4-bc33-fc521/gok-shu/manifest.json"
 gojo = "s3://voice-cloning-zero-shot/e26a3491-8422-4fb0-9772-b6c4be1bca90/gojo/manifest.json"
 getojp = "s3://voice-cloning-zero-shot/afc16f8a-042b-4a3c-aeaa-92ce47770772/getojp/manifest.json"
+sukunasp = "s3://voice-cloning-zero-shot/54098161-1082-41be-afce-21a67f2f787e/original/manifest.json"
+sukunajp = "s3://voice-cloning-zero-shot/65cca04f-e84d-4350-828a-8833df432d0d/original/manifest.json"
 
-
-def text_to_speech(text, voice, api_key, user_id):
+def text_to_speech(text, voice, playht_api_key, user_id):
     url = "https://api.play.ht/api/v2/tts"
 
     headers = {
-        "Authorization": f"Bearer {api_key}",
+        "Authorization": f"Bearer {playht_api_key}",
         "X-User-Id": user_id
     }
 
@@ -45,22 +48,29 @@ def text_to_speech(text, voice, api_key, user_id):
     response = requests.post(url, json=payload, headers=headers)
 
     if response.status_code == 201:
-        time.sleep(20)
-        audio_url = response.json().get('url')
-        return audio_url if audio_url else "Error: URL not found in response"
+        time.sleep(20)  # Ensure the audio is ready
+        response_data = response.json()
+        audio_url = response_data.get('url')
+        duration = response_data.get('duration')
+        if audio_url and duration:
+            return audio_url, duration
+        else:
+            return "Error: URL or duration not found in response", None
     else:
-        return "Error: " + response.text
+        print(f"Error: {response.text}")  # Debugging line
+        return f"Error: {response.text}", None
 
 
 
-cloned_voices = get_cloned_voices("2ce4d441c833453aaf3bcf1bcc2aca7b", "ynqkzbWUjISoU9q90qWtywn2gQF2")
+
+cloned_voices = get_cloned_voices("2d89f10942dd45f9b02e1db560f572c6", "0KgLGbE09wSvs4Fvpkb9fMU4DgC3")
 print(cloned_voices)
 
 
 # Example usage
 api_key = "2d89f10942dd45f9b02e1db560f572c6"
 text = "hi"
-voice = gojo
+voice = getojp
 user_id = "0KgLGbE09wSvs4Fvpkb9fMU4DgC3"
 
 
